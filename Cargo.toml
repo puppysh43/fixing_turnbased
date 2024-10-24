@@ -1,0 +1,8 @@
+[package]
+name = "fixing_turnbased"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+hecs = "0.10.5"
+macroquad = "0.4.13"
