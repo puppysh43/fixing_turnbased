@@ -13,32 +13,16 @@ pub fn init_ecs() -> World {
     let pc_01 = ecs.spawn((
         Renderable::new(String::from("character")),
         IVec2::new(0, 0),
-        Attributes::default(),
-        Skills::new(vec![
-            (SkillType::RangedTwoHanded, 2),
-            (SkillType::Ranged, 0),
-            (SkillType::Melee, 0),
-            (SkillType::Drive, 0),
-        ]),
         ActionPoints::new(),
         MovementPoints::default(),
-        Stance::Standing,
         ControlType::PC,
         Collideable,
     ));
     let npc_01 = ecs.spawn((
         Renderable::new(String::from("character")),
         IVec2::new(20, 20),
-        Attributes::default(),
-        Skills::new(vec![
-            (SkillType::RangedTwoHanded, 2),
-            (SkillType::Ranged, 0),
-            (SkillType::Melee, 0),
-            (SkillType::Drive, 0),
-        ]),
         ActionPoints::new(),
         MovementPoints::default(),
-        Stance::Standing,
         ControlType::NPC,
         Collideable,
     ));

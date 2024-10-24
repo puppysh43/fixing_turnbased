@@ -217,3 +217,5 @@ impl GameLogMessage {
         Self(contents)
     }
 }
+///tag struct to mark something as having collision
+pub struct Collideable;
