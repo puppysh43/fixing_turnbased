@@ -1,16 +1,10 @@
 mod moi;
-mod rpg_components;
-mod weapons;
 pub use moi::*;
-pub use rpg_components::*;
-pub use weapons::*;
 
 use hecs::*;
 use macroquad::prelude::*;
 //this is the big mod file for components that will expand as I add more components
 
-///tag component to mark an entity as a reticule owned by a particular character
-pub struct Reticule(Entity);
 ///Component that allows an entity to be rendered, contains the hashmap key needed to retrieve
 ///the necessary Texture2D from the texture atlas
 #[derive(Clone, Debug)]
@@ -164,36 +158,6 @@ impl ActionPoints {
     }
 }
 
-///Enum that determines what kind of cover something is. Note this doesn't effect how much of a defensive bonus
-///the cover gives but rather what stance a character needs to be to benefit from the cover
-#[derive(Copy, Clone, PartialEq, Eq, Debug)]
-pub enum CoverType {
-    ///A standing or lower character will count as in cover when behind Full Cover
-    FullCover,
-    ///A crouched or lower character will count as in cover when behind Half Cover
-    HalfCover,
-    ///A prone character will count as in cover when behind Quarter Cover
-    QuarterCover,
-}
-
-///Marks an object as being destructible, with a protection and structure rating corresponding to armor
-///and health respectively. Has its own unique rules for how much structure = what condition
-pub struct ObjectHealth {
-    protection: i32,
-    structure: i32,
-}
-
-///Tag component that marks an entity as in cover and points to what object the character is in cover behind
-pub struct InCover(Entity);
-
-#[derive(Copy, Clone, PartialEq, Eq, Debug)]
-///Marks what stance a character is in
-pub enum Stance {
-    Standing,
-    Crouched,
-    Prone,
-}
-
 ///tag component that points to a weapon and marks it as equipped by an entity that has this component
 pub struct EquippedRangedWeapon(Entity);
 
@@ -232,19 +196,6 @@ impl MovementPoints {
     ///returns the current amount of movement points
     pub fn current(&self) -> i32 {
         self.current
-    }
-}
-
-///tag component that marks an entity as being collideable aka other entities can't enter the same square as it
-pub struct Collideable;
-
-pub struct Name(String);
-impl Name {
-    pub fn new(name: String) -> Self {
-        Self(name)
-    }
-    pub fn get(&self) -> String {
-        self.0.clone()
     }
 }
 ///Component spawned to add a string to debug log used to track game/engine behavior

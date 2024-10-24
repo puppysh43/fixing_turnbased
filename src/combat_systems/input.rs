@@ -10,11 +10,6 @@ pub fn system(state: &mut GameState, combat_encounter: &mut CombatEncounter) {
     let mut cmd_buf = CommandBuffer::new();
     //first check with the combat encounter to see which entity/character is being currently controlled
     let active_entity = combat_encounter.next_turn().unwrap();
-    /*
-    cmd_buf.spawn((DebugLogMessage::new(format!(
-        "Current Active Entity ID: {:?}",
-        active_entity
-    )),));*/
 
     //make an option to hold the queried action points
     let mut action_points_query: Option<ActionPoints> = None;
@@ -22,56 +17,9 @@ pub fn system(state: &mut GameState, combat_encounter: &mut CombatEncounter) {
         action_points_query = Some(*ap);
     }
     let mut action_points = action_points_query.unwrap();
-    /*
-    blank template for pushing a debug/log message
-    cmd_buf.spawn((DebugLogMessage::new(String::from("")),));
-    */
 
     match state.control_state {
         CombatActionType::None => {
-            //choose to do a ranged attack
-            if is_key_pressed(KeyCode::F) {
-                match action_points.significant_action() {
-                    Ok(ap_left) => {
-                        state.control_state = CombatActionType::RangedAttack;
-                        println!();
-                        cmd_buf.spawn((GameLogMessage::new(format!(
-                            "[Entity Name] has decided to attack and now has {} AP left!",
-                            ap_left
-                        )),));
-                        //spawn in a reticule
-                    }
-                    Err(ap_left) => {
-                        cmd_buf.spawn((GameLogMessage::new(format!(
-                            "[Entity Name] doesn't have enough action points to make a ranged attack, only has {} AP!",
-                            ap_left
-                        )),));
-                    }
-                }
-            }
-            //reload
-            if is_key_pressed(KeyCode::R) {
-                match action_points.minor_action() {
-                    Ok(ap_left) => {
-                        state.ecs.spawn((MOIReload::new(active_entity),));
-                    }
-                    Err(ap_left) => {
-                        //
-                    }
-                }
-            }
-            //choose to aim at an enemy
-            if is_key_pressed(KeyCode::A) {
-                match action_points.minor_action() {
-                    Ok(ap_left) => {
-                        state.control_state = CombatActionType::Aiming;
-                        //spawn in a reticule
-                    }
-                    Err(ap_left) => {
-                        //
-                    }
-                }
-            }
             //choose to start moving
             if is_key_pressed(KeyCode::S) {
                 cmd_buf.spawn((DebugLogMessage::new(String::from("S Key has been pressed")),));
@@ -91,11 +39,6 @@ pub fn system(state: &mut GameState, combat_encounter: &mut CombatEncounter) {
                     }
                 }
             }
-            //change stance
-            if is_key_pressed(KeyCode::C) {
-                state.control_state = CombatActionType::ChangingStance;
-                println!("character is changing stance.");
-            }
             if is_key_down(KeyCode::LeftShift) && is_key_pressed(KeyCode::Q)
                 || is_key_down(KeyCode::RightShift) && is_key_pressed(KeyCode::Q)
             {
@@ -104,24 +47,6 @@ pub fn system(state: &mut GameState, combat_encounter: &mut CombatEncounter) {
             if is_key_pressed(KeyCode::Enter) {
                 state.control_state = CombatActionType::EndTurn;
             }
-        }
-        CombatActionType::RangedAttack => {
-            //ranged attack code goes here [move reticule MOI or send ranged attack MOI]
-        }
-        CombatActionType::MeleeAttack => {
-            //melee attack code goes here
-        }
-        CombatActionType::Leadership => {
-            //leadership check code IG
-        }
-        CombatActionType::Aiming => {
-            //aiming code - move reticule and select then do aiming MOI
-        }
-        CombatActionType::ChangingStance => {
-            //changing stance code, change stance moi w/ direction enum I guess
-        }
-        CombatActionType::Drawing => {
-            //this one will be a pain in the ass will need a menu and different options and all that bullshit
         }
         CombatActionType::Movement => {
             if is_key_pressed(KeyCode::Escape) {
@@ -149,29 +74,6 @@ pub fn system(state: &mut GameState, combat_encounter: &mut CombatEncounter) {
             if is_key_pressed(KeyCode::Escape) {
                 state.control_state = CombatActionType::None;
             }
-        }
-        CombatActionType::Grapple => {
-            //this one is gonna be really complicated lmao
-        }
-        CombatActionType::Interact => {
-            //this one will probably go unused for a while
-        }
-        CombatActionType::UseItem(useitemstate) => {
-            match &useitemstate {
-                UseItemState::Selecting => {
-                    //
-                }
-                UseItemState::Using => {
-                    //
-                }
-            }
-        }
-        CombatActionType::Look => {
-            //player can move reticule, press enter to get a short description printed to the log, or use shift enter to get a detailed description
-            //including identifying equipment but using 1AP in the process
-        }
-        CombatActionType::PickUp => {
-            //this one also may not need to be its own control state we shall see
         }
         CombatActionType::EndTurn => {
             //use y or n to confirm or deny if the player actually wants to end turn.
@@ -236,6 +138,3 @@ fn get_delta() -> Option<IVec2> {
         None
     }
 }
-
-fn move_with_collision(state: &mut GameState, entity_to_move: Entity) {}
-fn move_without_collision(state: &mut GameState, entity_to_move: Entity) {}
